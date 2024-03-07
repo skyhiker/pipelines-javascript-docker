@@ -14,9 +14,6 @@
      repository: "docker.io/$(imageName)"
      command: build
      Dockerfile: app/Dockerfile
-     tags: |
-      latest
-      $(tag)
 
  - task: Docker@2
    displayName: List builded images
@@ -33,5 +30,5 @@
    displayName: Prisma Cloud - Scan
    inputs:
      script: |
-       $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $(imageName)
+       $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $(imageName):$(Build.BuildId)
 
