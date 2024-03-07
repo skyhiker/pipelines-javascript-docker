@@ -30,4 +30,4 @@
    displayName: Prisma Cloud - Scan
    inputs:
      script: |
-       $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $imageName
+       $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $(imageName)
