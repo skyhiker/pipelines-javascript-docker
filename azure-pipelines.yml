@@ -1,34 +1,40 @@
- trigger:
+trigger:
  - main
 
- pool:
+pool:
    vmImage: 'ubuntu-latest' 
 
- variables:
+variables:
    imageName: 'pipelines-javascript-docker'
 
- steps:
- - task: Docker@2
-   displayName: Build an image
-   inputs:
-     repository: "docker.io/$(imageName)"
-     command: build
-     Dockerfile: app/Dockerfile
+stages:
+- stage: Build
+  displayName: Build, Scan and Push image
+  jobs:
+    - job: Build
+      displayName: Build, Scan and Push image
+      steps:
+      - task: Docker@2
+        displayName: Build an image
+        inputs:
+          repository: "docker.io/$(imageName)"
+          command: build
+          Dockerfile: app/Dockerfile
 
- - task: Docker@2
-   displayName: List builded images
-   inputs:
-     repository: $(Build.Repository.Name)
-     command: "images"
- - task: CmdLine@2
-   displayName: Install TwistCLI
-   inputs:
-     script: |
-       curl -s -k -u $(PCUSER):$(PCPASS) $(PC_CONSOLE)/api/v1/util/twistcli -v -o $(Build.SourcesDirectory)/twistcli
-       chmod +x $(Build.SourcesDirectory)/twistcli
- - task: CmdLine@2
-   displayName: Prisma Cloud - Scan
-   inputs:
-     script: |
-       $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $(imageName):$(Build.BuildId)
+      - task: Docker@2
+        displayName: List builded images
+        inputs:
+          repository: $(Build.Repository.Name)
+          command: "images"
+      - task: CmdLine@2
+        displayName: Install TwistCLI
+        inputs:
+          script: |
+            curl -s -k -u $(PCUSER):$(PCPASS) $(PC_CONSOLE)/api/v1/util/twistcli -v -o $(Build.SourcesDirectory)/twistcli
+            chmod +x $(Build.SourcesDirectory)/twistcli
+      - task: CmdLine@2
+        displayName: Prisma Cloud - Scan
+        inputs:
+          script: |
+            $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $(imageName):$(Build.BuildId)
 
