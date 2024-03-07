@@ -41,5 +41,5 @@ stages:
       - task: Docker@2
         displayName: Push image to the Registry
         inputs:
-          repository: $(Build.Repository.Name)
+          repository: $(imageName):$(Build.BuildId)
           command: "push"
