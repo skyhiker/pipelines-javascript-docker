@@ -15,19 +15,19 @@
      command: build
      Dockerfile: app/Dockerfile
 
-  - task: Docker@2
-    displayName: List builded images
-    inputs:
-      repository: $(Build.Repository.Name)
-      command: "images"
-  - task: CmdLine@2
-    displayName: Install TwistCLI
-    inputs:
-      script: |
-        curl -s -k -u $(PCUSER):$(PCPASS) $(PC_CONSOLE)/api/v1/util/twistcli -v -o $(Build.SourcesDirectory)/twistcli
-        chmod +x $(Build.SourcesDirectory)/twistcli
-  - task: CmdLine@2
-    displayName: Prisma Cloud - Scan
-    inputs:
-      script: |
-        $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $BUILD_IMAGE
+ - task: Docker@2
+   displayName: List builded images
+   inputs:
+     repository: $(Build.Repository.Name)
+     command: "images"
+ - task: CmdLine@2
+   displayName: Install TwistCLI
+   inputs:
+     script: |
+       curl -s -k -u $(PCUSER):$(PCPASS) $(PC_CONSOLE)/api/v1/util/twistcli -v -o $(Build.SourcesDirectory)/twistcli
+       chmod +x $(Build.SourcesDirectory)/twistcli
+ - task: CmdLine@2
+   displayName: Prisma Cloud - Scan
+   inputs:
+     script: |
+       $(Build.SourcesDirectory)/twistcli images scan --address $(PC_CONSOLE) -u $(PCUSER) -p $(PCPASS) --details $BUILD_IMAGE
